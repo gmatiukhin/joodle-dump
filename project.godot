@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="Joodle Dump"
-run/main_scene="res://Game.tscn"
+run/main_scene="res://Game/Game.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Globals="*res://Game/Globals.gd"
 
 [display]
 

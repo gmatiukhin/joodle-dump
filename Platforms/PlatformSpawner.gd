@@ -1,7 +1,7 @@
 extends Node2D
 
 var rng = RandomNumberGenerator.new()
-var platform_preload = preload("res://Platform.tscn")
+var platform_preload = preload("res://Platforms/Platform.tscn")
 onready var viewport := get_viewport_rect().size
 
 const Y_SCATTER = 20
@@ -17,6 +17,8 @@ const NUM_PLATFORMS_PER_SCREEN = 5
 onready var platform_elevation_delta = viewport.y / NUM_PLATFORMS_PER_SCREEN
 
 var are_platforms_moving := false
+
+var platform_index := 0
 
 # Generates new platform above the screen
 func generate_platform():
@@ -40,22 +42,24 @@ func generate_platform():
 		spawn_platform(platform_position)
 
 func spawn_platform(pos: Vector2, duplicate := true):
-	print(pos)
 	var platform1 = platform_preload.instance() as StaticBody2D
 	platform1.position = pos
+	platform1.name = String(platform_index)
 	
 	last_platform_x = pos.x
 	last_platform_y = pos.y
 	
-	add_child(platform1)
+	add_child(platform1, true)
 	
 	# Spawn a second platform to the side, so that wrapping is be possible
 	if duplicate:
 		var platform2 = platform_preload.instance() as StaticBody2D
 		var wrap_offset = viewport.x * (1 if pos.x < viewport.x / 2 else -1)
 		platform2.position = pos + Vector2(wrap_offset, 0)
+		platform2.name = String(platform_index)
 		
-		add_child(platform2)
+		add_child(platform2, true)
+	platform_index += 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -67,8 +71,7 @@ func remove_platforms_below():
 	var children = get_children()
 	for child in children:
 		var platform = child as StaticBody2D
-		if platform.position.y < -1 * viewport.y:
-			print(platform.name)
+		if platform.position.y > viewport.y + Globals.GRACE_MARGIN:
 			child.queue_free()
 
 # Moves platforms down with constant speed

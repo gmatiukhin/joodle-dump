@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Joodler.png-9e903c3dfacc609dc553ecc480b883ed.stex"
+path="res://.import/Ground.png-63a8412205a85c56642e766f53308ba4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Joodler.png"
-dest_files=[ "res://.import/Joodler.png-9e903c3dfacc609dc553ecc480b883ed.stex" ]
+source_file="res://Platforms/Ground.png"
+dest_files=[ "res://.import/Ground.png-63a8412205a85c56642e766f53308ba4.stex" ]
 
 [params]
 

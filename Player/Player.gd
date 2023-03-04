@@ -13,9 +13,15 @@ var charge = 1
 var velocity = Vector2()
 
 onready var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+onready var viewport := get_viewport_rect().size
 
 signal first_jump
 var is_first_jump_emited := false
+
+signal new_platform(platform_index)
+signal death
+
+var ignore_input := false
 
 func _physics_process(delta):
 	# Horizontal movement code
@@ -23,10 +29,10 @@ func _physics_process(delta):
 	# Change position.x directly for precise controls
 	position.x += walk * delta
 	# Wrap screen border 
-	position.x = wrapf(position.x, 0, get_viewport_rect().size.x)
+	position.x = wrapf(position.x, 0, viewport.x)
 	
 	# Jumping controls
-	if is_on_floor():
+	if is_on_floor() and not ignore_input:
 		if Input.is_action_pressed("jump"):
 			charge *= CHARGE_MODIFIER
 			charge = clamp(charge, 1, 4)
@@ -46,3 +52,16 @@ func _physics_process(delta):
 	
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
+	
+	# Process collisions with platforms
+	var collision = get_last_slide_collision()
+	if collision != null and is_on_floor():
+		emit_signal("new_platform", int(collision.collider.name))
+	
+	if position.y > viewport.y + Globals.GRACE_MARGIN:
+		emit_signal("death")
+		self.queue_free()
+
+
+func _on_HUD_ignore_input(val):
+	ignore_input = val

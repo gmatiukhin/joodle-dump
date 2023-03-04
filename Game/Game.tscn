@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Game/Game.gd" type="Script" id=1]
+[ext_resource path="res://Platforms/PlatformSpawner.gd" type="Script" id=2]
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=4]
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 64, 243 )
+
+[node name="PlatformSpawner" type="Node2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="HUD" parent="." instance=ExtResource( 4 )]
+
+[connection signal="death" from="Player" to="." method="game_over"]
+[connection signal="first_jump" from="Player" to="PlatformSpawner" method="_on_Player_first_jump"]
+[connection signal="new_platform" from="Player" to="." method="_on_Player_new_platform"]
+[connection signal="ignore_input" from="HUD" to="Player" method="_on_HUD_ignore_input"]
+[connection signal="restart_game" from="HUD" to="." method="restart_game"]
+[connection signal="start_game" from="HUD" to="." method="start_game"]
