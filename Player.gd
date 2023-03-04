@@ -10,11 +10,12 @@ const CHARGE_MODIFIER = 1.03
 # Stores charge between frames
 var charge = 1
 
-const DUCK_SPEED = 100
-
 var velocity = Vector2()
 
 onready var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+
+signal first_jump
+var is_first_jump_emited := false
 
 func _physics_process(delta):
 	# Horizontal movement code
@@ -24,18 +25,18 @@ func _physics_process(delta):
 	# Wrap screen border 
 	position.x = wrapf(position.x, 0, get_viewport_rect().size.x)
 	
-	# Jumping and ducking controls
+	# Jumping controls
 	if is_on_floor():
-#		print(charge)
 		if Input.is_action_pressed("jump"):
 			charge *= CHARGE_MODIFIER
 			charge = clamp(charge, 1, 4)
 		if Input.is_action_just_released("jump"):
 			velocity.y = -JUMP_SPEED * charge
 			charge = 1
+			if not is_first_jump_emited:
+				emit_signal("first_jump")
 	else:
-		if Input.is_action_just_pressed("duck"):
-			velocity.y += DUCK_SPEED
+		charge = 1 # Reset charge if falling
 	
 	# Vertical acceleration/deceleration code. Apply gravity.
 	if velocity.y < 0: # Juming
