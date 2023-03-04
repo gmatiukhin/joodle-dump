@@ -4,7 +4,7 @@
 [ext_resource path="res://Joodler.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 8, 8 )
+extents = Vector2( 7, 8 )
 
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 2

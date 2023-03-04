@@ -1,7 +1,6 @@
 extends KinematicBody2D
 
 const WALK_SPEED = 100
-const WALK_MAX_SPEED = 200
 
 const JUMP_SPEED = 200
 const JUMP_DECELERATION = 1.1
@@ -18,14 +17,16 @@ var velocity = Vector2()
 onready var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _physics_process(delta):
-	# Horizontal movement code. First, get the player's input.
+	# Horizontal movement code
 	var walk = WALK_SPEED * (Input.get_action_strength("move_right") - Input.get_action_strength("move_left"))
-	# Slow down the player if they're not trying to move.
+	# Change position.x directly for precise controls
 	position.x += walk * delta
+	# Wrap screen border 
+	position.x = wrapf(position.x, 0, get_viewport_rect().size.x)
 	
 	# Jumping and ducking controls
 	if is_on_floor():
-		print(charge)
+#		print(charge)
 		if Input.is_action_pressed("jump"):
 			charge *= CHARGE_MODIFIER
 			charge = clamp(charge, 1, 4)
@@ -44,5 +45,3 @@ func _physics_process(delta):
 	
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
-	# Wrap x position
-	position.x = wrapf(position.x, 0, get_viewport_rect().size.x)
