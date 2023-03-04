@@ -44,7 +44,7 @@ func generate_platform():
 func spawn_platform(pos: Vector2, duplicate := true):
 	var platform1 = platform_preload.instance() as StaticBody2D
 	platform1.position = pos
-	platform1.name = String(platform_index)
+	platform1.name = str(platform_index)
 	
 	last_platform_x = pos.x
 	last_platform_y = pos.y
@@ -56,7 +56,8 @@ func spawn_platform(pos: Vector2, duplicate := true):
 		var platform2 = platform_preload.instance() as StaticBody2D
 		var wrap_offset = viewport.x * (1 if pos.x < viewport.x / 2 else -1)
 		platform2.position = pos + Vector2(wrap_offset, 0)
-		platform2.name = String(platform_index)
+		# Add `_` to differentiate this copy from the main platform
+		platform2.name = "_" + str(platform_index)
 		
 		add_child(platform2, true)
 	platform_index += 1
