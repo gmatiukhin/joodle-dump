@@ -2,7 +2,7 @@ extends Node2D
 
 var rng = RandomNumberGenerator.new()
 var platform_preload = preload("res://Platforms/Platform.tscn")
-onready var viewport := get_viewport_rect().size
+@onready var viewport := get_viewport_rect().size
 
 const Y_SCATTER = 20
 const X_SCATTER = 60
@@ -10,11 +10,11 @@ const X_SCATTER = 60
 const PLATFORM_CLEAR_ZONE = 20 # Space to leave free for jumps
 const PLATFORM_MOVEMENT_SPEED = 40
 
-onready var last_platform_y := 0.0
-onready var last_platform_x := 0.0
+@onready var last_platform_y := 0.0
+@onready var last_platform_x := 0.0
 
 const NUM_PLATFORMS_PER_SCREEN = 5
-onready var platform_elevation_delta = viewport.y / NUM_PLATFORMS_PER_SCREEN
+@onready var platform_elevation_delta = viewport.y / NUM_PLATFORMS_PER_SCREEN
 
 var are_platforms_moving := false
 
@@ -42,7 +42,7 @@ func generate_platform():
 		spawn_platform(platform_position)
 
 func spawn_platform(pos: Vector2, duplicate := true):
-	var platform1 = platform_preload.instance() as StaticBody2D
+	var platform1 = platform_preload.instantiate() as StaticBody2D
 	platform1.position = pos
 	platform1.name = str(platform_index)
 	
@@ -53,7 +53,7 @@ func spawn_platform(pos: Vector2, duplicate := true):
 	
 	# Spawn a second platform to the side, so that wrapping is be possible
 	if duplicate:
-		var platform2 = platform_preload.instance() as StaticBody2D
+		var platform2 = platform_preload.instantiate() as StaticBody2D
 		var wrap_offset = viewport.x * (1 if pos.x < viewport.x / 2 else -1)
 		platform2.position = pos + Vector2(wrap_offset, 0)
 		# Add `_` to differentiate this copy from the main platform

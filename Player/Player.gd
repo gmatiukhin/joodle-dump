@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 const WALK_SPEED = 100
 
@@ -12,8 +12,8 @@ var charge = 1
 
 var velocity = Vector2()
 
-onready var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-onready var viewport := get_viewport_rect().size
+@onready var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+@onready var viewport := get_viewport_rect().size
 
 signal first_jump
 var is_first_jump_emited := false
@@ -51,7 +51,11 @@ func _physics_process(delta):
 	velocity.y += gravity * FALL_ACCELERATION * delta
 	
 	# Move based on the velocity and snap to the ground.
-	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
+	set_velocity(velocity)
+	# TODOConverter40 looks that snap in Godot 4.0 is float, not vector like in Godot 3 - previous value `Vector2.DOWN`
+	set_up_direction(Vector2.UP)
+	move_and_slide()
+	velocity = velocity
 	
 	# Process collisions with platforms
 	var collision = get_last_slide_collision()
